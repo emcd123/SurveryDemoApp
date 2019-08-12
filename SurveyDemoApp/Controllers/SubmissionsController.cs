@@ -19,19 +19,23 @@ namespace SurveyDemoApp.Controllers
             _context = context;
         }
 
-        public IActionResult NewSubmissionViewModel()
+        public IActionResult IndexNewSubmissionViewModel()
         {
             List<Question> _questions = _context.Question.ToList();
             NewSubmissionViewModel vm = new NewSubmissionViewModel();
             vm.allQuestions = _questions;
             vm.allSubmissions = new List<Submission> { };
-            return View( vm);
+            return View(vm);
         }
 
         // GET: Submissions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Submission.ToListAsync());
+            List<Question> _questions = _context.Question.ToList();
+            NewSubmissionViewModel vm = new NewSubmissionViewModel();
+            vm.allQuestions = _questions;
+            vm.allSubmissions = new List<Submission> { };
+            return View(vm);
         }
 
         // GET: Submissions/Details/5

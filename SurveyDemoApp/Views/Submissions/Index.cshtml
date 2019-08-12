@@ -5,13 +5,11 @@
     ViewBag.Title = "NewSubmissionViewModel";
 }
 
-<h2>Create New Submission</h2>
-<hr />
-<select>
-    @*Iterating Employee ViewModel *@
-    @foreach (var item in Model.allQuestions)
-    {
-        <option>@item.QuestionText</option>
+<p><b>Question List</b></p>
+
+@foreach (Question question in Model.allQuestions)
+{
+        <label>@question.QuestionNo</label>
+        <label>@question.QuestionText</label>
     }
-</select>
 
