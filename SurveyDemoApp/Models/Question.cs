@@ -9,6 +9,9 @@ namespace SurveyDemoApp.Models
     public class Question
     {
         public int Id { get; set; }
+
+        public int QuestionNo { get; set; }
+
         public string QuestionText { get; set; }
 
         [DataType(DataType.Date)]

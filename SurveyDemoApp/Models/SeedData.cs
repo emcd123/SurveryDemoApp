@@ -23,6 +23,7 @@ namespace SurveyDemoApp.Models
                 context.Question.AddRange(
                     new Question
                     {
+                        QuestionNo = 2,
                         QuestionText = "Did you make this with MVC?",
                         AskingDate = DateTime.Parse("1989-2-12"),
                     }
