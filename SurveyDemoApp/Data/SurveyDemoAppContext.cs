@@ -17,5 +17,7 @@ namespace SurveyDemoApp.Models
         public DbSet<SurveyDemoApp.Models.User> User { get; set; }
 
         public DbSet<SurveyDemoApp.Models.Question> Question { get; set; }
+
+        public DbSet<SurveyDemoApp.Models.Submission> Submission { get; set; }
     }
 }
