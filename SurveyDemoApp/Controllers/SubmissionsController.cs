@@ -19,15 +19,6 @@ namespace SurveyDemoApp.Controllers
             _context = context;
         }
 
-        public IActionResult IndexNewSubmissionViewModel()
-        {
-            List<Question> _questions = _context.Question.ToList();
-            NewSubmissionViewModel vm = new NewSubmissionViewModel();
-            vm.allQuestions = _questions;
-            vm.allSubmissions = new List<Submission> { };
-            return View(vm);
-        }
-
         // GET: Submissions
         public async Task<IActionResult> Index()
         {
