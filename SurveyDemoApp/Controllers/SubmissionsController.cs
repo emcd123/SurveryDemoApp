@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SurveyDemoApp.Models;
+using SurveyDemoApp.ViewModels;
 
 namespace SurveyDemoApp.Controllers
 {
@@ -16,6 +17,15 @@ namespace SurveyDemoApp.Controllers
         public SubmissionsController(SurveyDemoAppContext context)
         {
             _context = context;
+        }
+
+        public IActionResult NewSubmissionViewModel()
+        {
+            List<Question> _questions = _context.Question.ToList();
+            NewSubmissionViewModel vm = new NewSubmissionViewModel();
+            vm.allQuestions = _questions;
+            vm.allSubmissions = new List<Submission> { };
+            return View( vm);
         }
 
         // GET: Submissions
