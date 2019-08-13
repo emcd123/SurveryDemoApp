@@ -70,37 +70,37 @@ namespace SurveyDemoApp.Controllers
             return View(vm);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] List<Submission> submissions)
-        {
-            if (ModelState.IsValid)
-            {
-                foreach (Submission submission in submissions)
-                {
-                    _context.Submission.Add(submission);
-                    _context.SaveChanges();
-                }
-                return RedirectToAction("Index");
-            }
-            return View(submissions);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(List<Submission> submissions)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        foreach (Submission submission in submissions)
+        //        {
+        //            _context.Submission.Add(submission);
+        //            _context.SaveChanges();
+        //        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(submissions);
+        //}
 
         // POST: Submissions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] Submission submission)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(submission);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(submission);
-        //}
+        public async Task<IActionResult> Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] Submission submission)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(submission);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(submission);
+        }
 
         // GET: Submissions/Edit/5
         public async Task<IActionResult> Edit(int? id)
