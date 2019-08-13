@@ -10,6 +10,6 @@ namespace SurveyDemoApp.ViewModels
     {
         public IEnumerable<Question> allQuestions { get; set; }
 
-        public IEnumerable<Submission> allSubmissions { get; set; }
+        public IEnumerable<Submission> allSubmissions { get; set; } 
     }
 }

@@ -22,11 +22,7 @@ namespace SurveyDemoApp.Controllers
         // GET: Submissions
         public async Task<IActionResult> Index()
         {
-            List<Question> _questions = _context.Question.ToList();
-            NewSubmissionViewModel vm = new NewSubmissionViewModel();
-            vm.allQuestions = _questions;
-            vm.allSubmissions = new List<Submission> { };
-            return View(vm);
+            return View(await _context.Submission.ToListAsync());
         }
 
         // GET: Submissions/Details/5
@@ -47,18 +43,9 @@ namespace SurveyDemoApp.Controllers
             return View(submission);
         }
 
-        // GET: Submissions/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Submissions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] Submission submission)
+        public async Task<IActionResult> SaveAnswer([Bind("Id,EmployeeId,QuestionId,AnswerText")] Submission submission)
         {
             if (ModelState.IsValid)
             {
@@ -68,6 +55,52 @@ namespace SurveyDemoApp.Controllers
             }
             return View(submission);
         }
+
+        // GET: Submissions/Create
+        public IActionResult Create()
+        {
+            List<Question> _questions = _context.Question.ToList();
+            NewSubmissionViewModel vm = new NewSubmissionViewModel();
+            vm.allQuestions = _questions;
+
+            List<Submission> _submissions = new List<Submission>(_questions.Count());
+            for (int i = 0; i < _submissions.Capacity; i++) _submissions.Add(null);
+            vm.allSubmissions = _submissions;
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] List<Submission> submissions)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (Submission submission in submissions)
+                {
+                    _context.Submission.Add(submission);
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            return View(submissions);
+        }
+
+        // POST: Submissions/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,EmployeeId,QuestionId,AnswerText")] Submission submission)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(submission);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(submission);
+        //}
 
         // GET: Submissions/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -1,38 +1,31 @@
-﻿
-@model SurveyDemoApp.ViewModels.NewSubmissionViewModel
+﻿@model IEnumerable<SurveyDemoApp.Models.Submission>
 
 @{
     ViewBag.Title = "NewSubmissionViewModel";
 }
 
-<h3>Please complete the following form</h3>
+<h2>Submissions</h2>
 
-<hr />
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                @foreach (Question question in Model.allQuestions)
-                {
-                    <div class="form-group">
-                        <input asp-for="@question.Id" type="hidden" value="@question.QuestionNo" class="control-label"/>
-                        <label asp-for="@question.QuestionNo" class="control-label">@question.QuestionNo</label>
-                        <label asp-for="@question.QuestionText" class="control-label">@question.QuestionText</label>
-                        <input value="" class="form-control" />
-                    </div>
-                }
-
-            <div class="form-group">
-                <input type="submit" value="SaveAnswer" class="btn btn-default" />
-            </div>
-        </form>
-    </div>
-</div>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
