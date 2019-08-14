@@ -12,6 +12,24 @@ namespace SurveyDemoApp.Controllers
 {
     public class SubmissionsController : Controller
     {
+        public ActionResult MultiCreate(List<string> AnswerText, List<int> QuestionId) {
+            List<Submission> submissions = new List<Submission>();
+            for (int i = 0; i < QuestionId.Count(); i++)
+            {
+                submissions.Add(new Submission { AnswerText = AnswerText[i], QuestionId = QuestionId[i] });
+            }
+            if (ModelState.IsValid)
+            {
+                foreach (Submission submission in submissions)
+                {
+                    _context.Submission.Add(submission);
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            return View(submissions);
+        }
+
         private readonly SurveyDemoAppContext _context;
 
         public SubmissionsController(SurveyDemoAppContext context)
