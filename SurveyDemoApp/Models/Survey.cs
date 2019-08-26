@@ -11,7 +11,7 @@ namespace SurveyDemoApp.Models
     {
         public int Id { get; set; }
 
-        public int Title { get; set; }
+        public string Title { get; set; }
 
         [NotMapped]
         private List<string> _questionIds { get; set; }
