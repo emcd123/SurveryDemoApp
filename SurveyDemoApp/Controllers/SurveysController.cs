@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SurveyDemoApp.Models;
+using SurveyDemoApp.ViewModels;
 
 namespace SurveyDemoApp.Controllers
 {
@@ -39,13 +40,32 @@ namespace SurveyDemoApp.Controllers
                 return NotFound();
             }
 
-            return View(survey);
+            var vm = new QuestionSelectViewModel();
+            vm.Survey = survey;
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText
+                                        })
+                                        .Where(a => vm.Survey.QuestionIds.Contains(a.Id.ToString()))
+                                        .ToListAsync();
+            vm.SurveyTitle = survey.Title;
+            return View(vm);
         }
 
         // GET: Surveys/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var vm = new QuestionSelectViewModel();
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText
+                                        })
+                                        .ToListAsync();
+            return View(vm);
         }
 
         // POST: Surveys/Create
@@ -53,13 +73,21 @@ namespace SurveyDemoApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,QuestionIdsForDB")] Survey survey)
+        public ActionResult Create(QuestionSelectViewModel model)
         {
+            Survey survey = new Survey();
+            var selected = model.QuestionSelections.Where(a => a.IsSelected).ToList();
+            // If you want Id's select that
+            var ids = selected.Select(g => g.Id).ToList();
+            var result = string.Join(",", ids.Select(x => x.ToString()).ToArray());
+
             if (ModelState.IsValid)
             {
-                _context.Add(survey);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                survey.QuestionIdsForDB = result;
+                survey.Title = model.SurveyTitle;
+                _context.Survey.Add(survey);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
             return View(survey);
         }
@@ -77,7 +105,26 @@ namespace SurveyDemoApp.Controllers
             {
                 return NotFound();
             }
-            return View(survey);
+
+            var vm = new QuestionSelectViewModel();
+            vm.Survey = survey;
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText,
+                                        })
+                                        .ToListAsync();
+            foreach (var question in vm.QuestionSelections)
+            {
+                if (vm.Survey.QuestionIds.Contains(question.Id.ToString()))
+                {
+                    question.IsSelected = true;
+                }
+            }
+            vm.SurveyTitle = survey.Title;
+
+            return View(vm);
         }
 
         // POST: Surveys/Edit/5
@@ -85,23 +132,28 @@ namespace SurveyDemoApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,QuestionIdsForDB")] Survey survey)
+        public async Task<IActionResult> Edit(QuestionSelectViewModel model)
         {
-            if (id != survey.Id)
-            {
-                return NotFound();
-            }
+            Survey survey = new Survey();
+            var selected = model.QuestionSelections.Where(a => a.IsSelected).ToList();
+            // If you want Id's select that
+            var ids = selected.Select(g => g.Id).ToList();
+            var result = string.Join(",", ids.Select(x => x.ToString()).ToArray());
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    survey.Id = model.SurveyId;
+                    survey.QuestionIdsForDB = result;
+                    survey.Title = model.SurveyTitle;
+
                     _context.Update(survey);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SurveyExists(survey.Id))
+                    if (!SurveyExists(model.Survey.Id))
                     {
                         return NotFound();
                     }

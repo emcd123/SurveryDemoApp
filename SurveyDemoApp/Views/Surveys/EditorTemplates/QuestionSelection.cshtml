@@ -1,0 +1,11 @@
+﻿@model SurveyDemoApp.ViewModels.QuestionSelection
+@{
+    ViewData["Title"] = "QuestionSelection";
+}
+
+<div>
+    @Model.Text
+    @Html.CheckBoxFor(a => a.IsSelected)
+    @Html.HiddenFor(a => a.Id)
+</div>
+
