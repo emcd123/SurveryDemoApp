@@ -8,6 +8,8 @@ namespace SurveyDemoApp.ViewModels
 {
     public class QuestionSelectViewModel
     {
+        public int SurveyId { set; get; }
+
         public Survey Survey { set; get; }
 
         public string SurveyTitle { set; get; }

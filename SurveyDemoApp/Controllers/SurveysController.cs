@@ -105,7 +105,26 @@ namespace SurveyDemoApp.Controllers
             {
                 return NotFound();
             }
-            return View(survey);
+
+            var vm = new QuestionSelectViewModel();
+            vm.Survey = survey;
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText,
+                                        })
+                                        .ToListAsync();
+            foreach (var question in vm.QuestionSelections)
+            {
+                if (vm.Survey.QuestionIds.Contains(question.Id.ToString()))
+                {
+                    question.IsSelected = true;
+                }
+            }
+            vm.SurveyTitle = survey.Title;
+
+            return View(vm);
         }
 
         // POST: Surveys/Edit/5
@@ -113,23 +132,28 @@ namespace SurveyDemoApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,QuestionIdsForDB")] Survey survey)
+        public async Task<IActionResult> Edit(QuestionSelectViewModel model)
         {
-            if (id != survey.Id)
-            {
-                return NotFound();
-            }
+            Survey survey = new Survey();
+            var selected = model.QuestionSelections.Where(a => a.IsSelected).ToList();
+            // If you want Id's select that
+            var ids = selected.Select(g => g.Id).ToList();
+            var result = string.Join(",", ids.Select(x => x.ToString()).ToArray());
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    survey.Id = model.SurveyId;
+                    survey.QuestionIdsForDB = result;
+                    survey.Title = model.SurveyTitle;
+
                     _context.Update(survey);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SurveyExists(survey.Id))
+                    if (!SurveyExists(model.Survey.Id))
                     {
                         return NotFound();
                     }
