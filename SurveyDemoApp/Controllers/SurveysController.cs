@@ -48,6 +48,7 @@ namespace SurveyDemoApp.Controllers
                                             Id = a.Id,
                                             Text = a.QuestionText
                                         })
+                                        .Where(a => vm.Survey.QuestionIds.Contains(a.Id.ToString()))
                                         .ToListAsync();
             vm.SurveyTitle = survey.Title;
             return View(vm);
