@@ -40,40 +40,38 @@ namespace SurveyDemoApp.Controllers
                 return NotFound();
             }
 
-            return View(survey);
+            var vm = new QuestionSelectViewModel();
+            vm.Survey = survey;
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText
+                                        })
+                                        .ToListAsync();
+            vm.SurveyTitle = survey.Title;
+            return View(vm);
         }
 
         // GET: Surveys/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var vm = new QuestionSelectViewModel();
-            vm.QuestionSelections = _context.Question
-                                           .Select(a => new QuestionSelection()
-                                           {
-                                               Id = a.Id,
-                                               Text = a.QuestionText
-                                           })
-                                           .ToList();
+            vm.QuestionSelections = await _context.Question
+                                        .Select(a => new QuestionSelection()
+                                        {
+                                            Id = a.Id,
+                                            Text = a.QuestionText
+                                        })
+                                        .ToListAsync();
             return View(vm);
         }
 
         // POST: Surveys/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Title,QuestionIdsForDB")] Survey survey)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(survey);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(survey);
-        //}
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(QuestionSelectViewModel model)
         {
             Survey survey = new Survey();
@@ -85,6 +83,7 @@ namespace SurveyDemoApp.Controllers
             if (ModelState.IsValid)
             {
                 survey.QuestionIdsForDB = result;
+                survey.Title = model.SurveyTitle;
                 _context.Survey.Add(survey);
                 _context.SaveChanges();
                 return RedirectToAction("Index");

@@ -1,4 +1,4 @@
-﻿@model SurveyDemoApp.Models.Survey
+﻿@model SurveyDemoApp.ViewModels.QuestionSelectViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,20 +11,23 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.SurveyTitle)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.SurveyTitle)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.QuestionIdsForDB)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.QuestionIdsForDB)
-        </dd>
+        @for (int i = 0; i < Model.QuestionSelections.Count(); i++)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => Model.QuestionSelections[i].Text)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => Model.QuestionSelections[i].Text)
+            </dd>
+        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @*<a asp-action="Edit" asp-route-id="@Model.Survey.Id">Edit</a> |*@
     <a asp-action="Index">Back to List</a>
 </div>

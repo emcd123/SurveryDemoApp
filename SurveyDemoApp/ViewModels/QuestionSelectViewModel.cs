@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SurveyDemoApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,10 @@ namespace SurveyDemoApp.ViewModels
 {
     public class QuestionSelectViewModel
     {
+        public Survey Survey { set; get; }
+
+        public string SurveyTitle { set; get; }
+
         public List<QuestionSelection> QuestionSelections { set; get; }
     }
 
