@@ -4,15 +4,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SurveyDemoApp.Models;
+using SurveyDemoApp.ViewModels;
 
 namespace SurveyDemoApp.Controllers
 {
     public class HomeController : Controller
     {
-        // GET: Home
-        public ActionResult Index()
+        private readonly SurveyDemoAppContext _context;
+        public HomeController(SurveyDemoAppContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        // GET: Home
+        public async Task<IActionResult> Index()
+        {
+            var surveys = await _context.Survey.ToListAsync();
+            if (surveys == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new HomePageViewModel();
+            vm.AllSurveys = surveys;
+            return View(vm);
         }
 
         // GET: Home/Details/5

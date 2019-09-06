@@ -1,12 +1,16 @@
-﻿
+﻿@model SurveyDemoApp.ViewModels.HomePageViewModel
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Index";
 }
 
 <h2>Your Dashboard</h2>
 
-<div id="list1" tabindex="100">
-    <partial name="_SurveyCardTemplate" />
+<div>
+    <h4>Surveys Available</h4>
+
+    @for (int i = 0; i < Model.AllSurveys.ToList().Count; i++)
+    {
+        @await Html.PartialAsync("_SurveyCardTemplate", Model.AllSurveys[i])
+    }
 </div>
 

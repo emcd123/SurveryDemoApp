@@ -1,5 +1,18 @@
-﻿
-<div>
-    <p> Card Data</p>
+﻿@model Survey
+<style>
+    /* Survey Content */
+    .card-template {
+        background-color: #FFFFFF;
+        margin: 2% auto; /* 15% from the top and centered */
+        border-radius: 20px;
+        padding: 20px;
+        border: 3px solid #888;
+        width: auto; /* Could be more or less, depending on screen size */
+    }
+</style>
+
+<!-- Modal content -->
+<div class="card-template">
+    <p>@Model.Title</p>
 </div>
 
