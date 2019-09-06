@@ -8,6 +8,8 @@ namespace SurveyDemoApp.ViewModels
 {
     public class NewSubmissionViewModel
     {
+        public int? SurveyId { get; set; }
+
         public IEnumerable<Question> allQuestions { get; set; }
 
         public IEnumerable<Submission> allSubmissions { get; set; } 

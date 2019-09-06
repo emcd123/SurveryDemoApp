@@ -13,8 +13,7 @@ namespace SurveyDemoApp.Models
             : base(options)
         {
         }
-
-        public DbSet<SurveyDemoApp.Models.User> User { get; set; }
+        
 
         public DbSet<SurveyDemoApp.Models.Question> Question { get; set; }
 

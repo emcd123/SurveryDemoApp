@@ -15,12 +15,13 @@
         <form method="POST" asp-action="MultiCreate">
             @for (int i = 0; i < Model.allQuestions.ToList().Count; i++)
             {
-                <div class="form-group">
-                    <input name="QuestionId" type="hidden" value="@Model.allQuestions.ToList()[i].Id" class="control-label" />
-                    <label class="control-label">@Model.allQuestions.ToList()[i].QuestionNo</label>
-                    <label class="control-label">@Model.allQuestions.ToList()[i].QuestionText</label>
-                    <input name="AnswerText" type="text" class="form-control" />
-                </div>
+            <div class="form-group">
+                <input name="SurveyId" type="hidden" value="@Model.SurveyId" class="control-label" />
+                <input name="QuestionId" type="hidden" value="@Model.allQuestions.ToList()[i].Id" class="control-label" />
+                <label class="control-label">@Model.allQuestions.ToList()[i].QuestionNo</label>
+                <label class="control-label">@Model.allQuestions.ToList()[i].QuestionText</label>
+                <input name="AnswerText" type="text" class="form-control" />
+            </div>
             }
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-default" />

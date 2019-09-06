@@ -11,6 +11,8 @@ namespace SurveyDemoApp.Models
 
         public int EmployeeId { get; set; }
 
+        public int? SurveyId { get; set; }
+
         public int QuestionId { get; set; }
 
         public string AnswerText { get; set; }
