@@ -13,6 +13,6 @@
 
 <!-- Modal content -->
 <div class="card-template">
-    <p>@Model.Title</p>
+    <a asp-controller="Submissions" asp-action="Create" asp-route-id="@Model.Id">@Model.Title</a>
 </div>
 

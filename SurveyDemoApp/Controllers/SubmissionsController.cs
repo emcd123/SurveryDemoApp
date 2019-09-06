@@ -75,34 +75,49 @@ namespace SurveyDemoApp.Controllers
         }
 
         // GET: Submissions/Create
-        public IActionResult Create()
+        //public IActionResult Create()
+        //{
+        //    List<Question> _questions = _context.Question.ToList();
+        //    NewSubmissionViewModel vm = new NewSubmissionViewModel();
+        //    vm.allQuestions = _questions;
+
+        //    List<Submission> _submissions = new List<Submission>(_questions.Count());
+        //    for (int i = 0; i < _submissions.Capacity; i++) _submissions.Add(null);
+        //    vm.allSubmissions = _submissions;
+
+        //    return View(vm);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int? Id)
         {
-            List<Question> _questions = _context.Question.ToList();
             NewSubmissionViewModel vm = new NewSubmissionViewModel();
+            List<Question> _questions;
+            List<Submission> _submissions;
+
+            if (Id == null)
+            {
+                _questions = _context.Question.ToList();
+                vm.allQuestions = _questions;
+
+                _submissions = new List<Submission>(_questions.Count());
+                for (int i = 0; i < _submissions.Capacity; i++) _submissions.Add(null);
+                vm.allSubmissions = _submissions;
+
+                return View(vm);
+            }
+
+            Survey survey = await _context.Survey.FindAsync(Id);
+            _questions = _context.Question.Where(question => survey.QuestionIds.Contains(question.Id.ToString())).ToList();
             vm.allQuestions = _questions;
 
-            List<Submission> _submissions = new List<Submission>(_questions.Count());
+            _submissions = new List<Submission>(_questions.Count());
             for (int i = 0; i < _submissions.Capacity; i++) _submissions.Add(null);
             vm.allSubmissions = _submissions;
 
             return View(vm);
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Create(List<Submission> submissions)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        foreach (Submission submission in submissions)
-        //        {
-        //            _context.Submission.Add(submission);
-        //            _context.SaveChanges();
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(submissions);
-        //}
 
         // POST: Submissions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
