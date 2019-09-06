@@ -12,11 +12,11 @@ namespace SurveyDemoApp.Controllers
 {
     public class SubmissionsController : Controller
     {
-        public ActionResult MultiCreate(List<string> AnswerText, List<int> QuestionId) {
+        public ActionResult MultiCreate(List<string> AnswerText, List<int> QuestionId, int? SurveyId) {
             List<Submission> submissions = new List<Submission>();
             for (int i = 0; i < QuestionId.Count(); i++)
             {
-                submissions.Add(new Submission { AnswerText = AnswerText[i], QuestionId = QuestionId[i] });
+                submissions.Add(new Submission { AnswerText = AnswerText[i], QuestionId = QuestionId[i], SurveyId = SurveyId });
             }
             if (ModelState.IsValid)
             {
@@ -109,6 +109,7 @@ namespace SurveyDemoApp.Controllers
             }
 
             Survey survey = await _context.Survey.FindAsync(Id);
+            vm.SurveyId = Id;
             _questions = _context.Question.Where(question => survey.QuestionIds.Contains(question.Id.ToString())).ToList();
             vm.allQuestions = _questions;
 
